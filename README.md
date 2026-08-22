@@ -13,11 +13,14 @@ using the product rather than a rigid test script.
 - **`@quantumblueconsulting/tracewrite-schema`** — the migration (`test_session`,
   `test_session_event`, `test_session_action`). Plain SQL, run it with whatever migration tool you
   already use.
-- **`@quantumblueconsulting/tracewrite-server`** — a Fastify plugin (`createTestSessionRoutes`) plus
-  the underlying session/timeline logic and the AI review step. Bring your own `pg` Pool and an
-  `authenticate` decorator.
+- **`@quantumblueconsulting/tracewrite-server`** — a Fastify plugin (`createTestSessionRoutes`) *or*
+  an Express router (`createTestSessionExpressRouter`, also covers Nest apps on
+  `@nestjs/platform-express`), both thin wrappers over the same host-agnostic session/timeline
+  logic and AI review step. Bring your own `pg` Pool and an `authenticate` hook/middleware.
 - **`@quantumblueconsulting/tracewrite-client`** — `TestingOverlay` and `TestSessionScreen`, React
-  components that take a `TracewriteClient` adapter. No assumptions about your auth or HTTP layer.
+  components with no router of their own (works under react-router, Next.js App Router, or
+  anything else that can give you a pathname), plus an optional ready-made `TracewriteClient`
+  (`createFetchTracewriteClient`) over `fetch`.
 
 ## Installing
 
@@ -38,7 +41,9 @@ read` set on the job, since the packages live in the same org as most consumers.
 **1. Run the migration** (`packages/schema/migrations/0001_add_test_session.sql`) against your
 database.
 
-**2. Server** — mount the plugin under an authenticated Fastify app:
+**2. Server** — mount the routes under an authenticated app. Pick the adapter for your framework:
+
+Fastify:
 
 ```js
 import { createTestSessionRoutes } from "@quantumblueconsulting/tracewrite-server";
@@ -55,13 +60,58 @@ app.register(
 `authenticate` must already be decorated on `app` (an `onRequest` hook), and must populate
 `request.user.sub` with the caller's account id — the shape `@fastify/jwt`'s default verify produces.
 
-**3. Client** — implement `TracewriteClient` over your own fetch/auth layer, once, and pass it to both
-components:
+Express, or Nest on `@nestjs/platform-express` (mount against the Nest app's underlying Express
+instance — this does not work with `@nestjs/platform-fastify`; use the Fastify plugin there instead):
+
+```js
+import { createTestSessionExpressRouter } from "@quantumblueconsulting/tracewrite-server";
+
+app.use(
+  "/test-sessions",
+  createTestSessionExpressRouter({
+    getPool: () => myPgPool,
+    authenticate: myAuthMiddleware, // (req, res, next) => populates req.user.sub
+    statusByCode: { invalid_input: 400, not_found: 404 },
+  })
+);
+```
+
+Requires JSON body parsing already applied ahead of the router (e.g. `express.json()`, which
+Nest's Express platform applies by default).
+
+**3. Client** — pass a `TracewriteClient` to both components. The built-in fetch client covers most
+setups:
 
 ```tsx
-import { TestingOverlay, TestSessionScreen, isTestingModeEnabled } from "@quantumblueconsulting/tracewrite-client";
+import {
+  TestingOverlay,
+  TestSessionScreen,
+  isTestingModeEnabled,
+  createFetchTracewriteClient,
+} from "@quantumblueconsulting/tracewrite-client";
 import "@quantumblueconsulting/tracewrite-client/styles.css";
 
+const client = createFetchTracewriteClient({
+  baseUrl: "/test-sessions",
+  getHeaders: () => ({ Authorization: `Bearer ${myAuthToken}` }),
+});
+
+// mounted once, as a sibling of your router's routes so it persists across navigation.
+// pathname comes from whatever router you use:
+//   react-router: useLocation().pathname
+//   Next.js App Router: usePathname() from "next/navigation"
+<TestingOverlay client={client} active={isSignedIn && isTestingModeEnabled("myapp.testingMode")} pathname={pathname} />
+
+// mounted at whatever route you choose, wrapped in your own page chrome.
+// sessionId comes from your router's own param (react-router's useParams().id,
+// a Next.js dynamic route's params.id) — omit it for the session list view:
+<TestSessionScreen client={client} sessionId={sessionId} />
+```
+
+A host with a non-fetch HTTP layer, or a different auth scheme, can implement `TracewriteClient`
+directly instead — it's a plain six-method interface over the same five REST routes:
+
+```tsx
 const client: TracewriteClient = {
   startSession: (label) => myApi.post("/test-sessions", { label }),
   endSession: (id) => myApi.patch(`/test-sessions/${id}`),
@@ -70,12 +120,6 @@ const client: TracewriteClient = {
   listEvents: (id) => myApi.get(`/test-sessions/${id}/events`),
   listActions: (id) => myApi.get(`/test-sessions/${id}/actions`),
 };
-
-// mounted once, as a sibling of your router's <Routes> so it persists across navigation:
-<TestingOverlay client={client} active={isSignedIn && isTestingModeEnabled("myapp.testingMode")} />
-
-// mounted at whatever route you choose, wrapped in your own page chrome:
-<TestSessionScreen client={client} />
 ```
 
 ## AI review

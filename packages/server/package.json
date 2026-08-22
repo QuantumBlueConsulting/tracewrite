@@ -7,6 +7,15 @@
   "exports": {
     ".": "./src/index.mjs"
   },
+  "files": ["src"],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/QuantumBlueConsulting/tracewrite.git",
+    "directory": "packages/server"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
   "scripts": {
     "build": "echo \"no build step — plain ESM\"",
     "typecheck": "tsc --noEmit -p tsconfig.json",

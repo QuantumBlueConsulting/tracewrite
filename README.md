@@ -19,6 +19,20 @@ using the product rather than a rigid test script.
 - **`@quantumblueconsulting/tracewrite-client`** — `TestingOverlay` and `TestSessionScreen`, React
   components that take a `TracewriteClient` adapter. No assumptions about your auth or HTTP layer.
 
+## Installing
+
+`tracewrite-server` and `tracewrite-client` are published to GitHub Packages (private, org-only for
+now). A consuming project needs an `.npmrc` pointing the scope there:
+
+```
+@quantumblueconsulting:registry=https://npm.pkg.github.com
+//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}
+```
+
+and `NODE_AUTH_TOKEN` set to a token with `read:packages` — locally, `gh auth token` (after `gh auth
+refresh -s read:packages` once); in CI, `${{ secrets.GITHUB_TOKEN }}` with `permissions: packages:
+read` set on the job, since the packages live in the same org as most consumers.
+
 ## Wiring it into a host app
 
 **1. Run the migration** (`packages/schema/migrations/0001_add_test_session.sql`) against your

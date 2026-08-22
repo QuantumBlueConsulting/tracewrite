@@ -8,6 +8,15 @@
     ".": "./src/index.ts",
     "./styles.css": "./src/styles.css"
   },
+  "files": ["src"],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/QuantumBlueConsulting/tracewrite.git",
+    "directory": "packages/client"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
   "scripts": {
     "build": "echo \"no build step — consumed as TS source via the host's own bundler\"",
     "typecheck": "tsc -b --noEmit",

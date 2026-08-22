@@ -1,0 +1,120 @@
+/* tracewrite: the UAT capture overlay's styles (TestingOverlay.tsx,
+ * TestSessionScreen.tsx's timeline rows). Fixed to the bottom-right corner
+ * so it never blocks the app underneath; add a `.no-print` rule of your own
+ * if your host prints pages and this shouldn't appear on them.
+ *
+ * Relies on theme tokens (--panel, --line, --muted, --green, --green-dark,
+ * --danger, --danger-bg) rather than hardcoding colors — define these as
+ * CSS custom properties somewhere your host already loads, or override the
+ * rules below directly.
+ */
+.testing-overlay {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 1000;
+  width: 22rem;
+  max-width: calc(100vw - 2rem);
+  background: var(--panel, #fff);
+  border: 1px solid var(--line, #d8ded9);
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  font-size: 0.85rem;
+}
+
+.testing-overlay-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.6rem;
+  border-bottom: 1px solid var(--line, #d8ded9);
+}
+
+.testing-overlay-header strong {
+  flex: 1;
+}
+
+.testing-overlay-header button {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+}
+
+.testing-overlay-timeline {
+  max-height: 16rem;
+  overflow-y: auto;
+  padding: 0.5rem 0.6rem;
+  border-bottom: 1px solid var(--line, #d8ded9);
+}
+
+.testing-overlay-empty {
+  color: var(--muted, #5d6660);
+  font-size: 0.8rem;
+}
+
+.testing-overlay-row {
+  padding: 0.3rem 0;
+  border-bottom: 1px dashed var(--line, #d8ded9);
+}
+
+.testing-overlay-row:last-child {
+  border-bottom: none;
+}
+
+.testing-overlay-row-navigation,
+.testing-overlay-row-focus {
+  color: var(--muted, #5d6660);
+  font-size: 0.78rem;
+}
+
+.testing-overlay-row-ai_reply {
+  color: var(--green-dark, #22522c);
+}
+
+.testing-overlay-badge {
+  display: inline-block;
+  margin-left: 0.4rem;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  padding: 0.05rem 0.4rem;
+  border-radius: 999px;
+  border: 1px solid var(--line, #d8ded9);
+  background: #eef1ef;
+  color: var(--muted, #5d6660);
+}
+
+.testing-overlay-badge-accepted {
+  background: #e7f2e9;
+  border-color: var(--green, #2f6b3a);
+  color: var(--green-dark, #22522c);
+}
+
+.testing-overlay-badge-dismissed {
+  background: var(--danger-bg, #fdf0ef);
+  border-color: var(--danger, #9b2c2c);
+  color: var(--danger, #9b2c2c);
+}
+
+.testing-overlay-comment-box {
+  padding: 0.5rem 0.6rem;
+}
+
+.testing-overlay-context {
+  font-size: 0.72rem;
+  color: var(--muted, #5d6660);
+  margin-bottom: 0.3rem;
+}
+
+.testing-overlay-input-row {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.testing-overlay-input-row input {
+  flex: 1;
+}
+
+.testing-overlay-input-row button {
+  padding: 0.4rem 0.7rem;
+}

@@ -1,0 +1,31 @@
+{
+  "name": "@quantumblueconsulting/tracewrite-server",
+  "version": "0.1.0",
+  "description": "tracewrite's backend: session/timeline logic and a Fastify plugin, both host-agnostic (bring your own pg Pool and auth decorator).",
+  "type": "module",
+  "main": "./src/index.mjs",
+  "exports": {
+    ".": "./src/index.mjs"
+  },
+  "scripts": {
+    "build": "echo \"no build step — plain ESM\"",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "lint": "echo \"no lint configured yet\"",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.115.0"
+  },
+  "peerDependencies": {
+    "fastify": "^5.1.0",
+    "pg": "^8.13.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/pg": "^8.11.0",
+    "@fastify/jwt": "^9.0.0",
+    "fastify": "^5.1.0",
+    "pg": "^8.13.0",
+    "typescript": "^5.6.0"
+  }
+}

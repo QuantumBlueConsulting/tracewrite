@@ -24,13 +24,11 @@
     "test": "echo \"no tests yet\""
   },
   "peerDependencies": {
-    "react": "^19.0.0",
-    "react-router-dom": "^7.0.0"
+    "react": "^19.0.0"
   },
   "devDependencies": {
     "@types/react": "^19.2.17",
     "react": "^19.2.8",
-    "react-router-dom": "^7.18.2",
     "typescript": "~6.0.2"
   }
 }

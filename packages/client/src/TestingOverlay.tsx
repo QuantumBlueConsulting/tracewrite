@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
-import { useLocation } from "react-router-dom";
 import type { TestSessionAction, TestSessionEvent, TestSessionEventType, TracewriteClient } from "./types";
 
 /**
@@ -33,6 +32,13 @@ export interface TestingOverlayProps {
    * signed-in account). The overlay itself has no opinion on auth.
    */
   active: boolean;
+  /**
+   * The current path, from whatever router the host uses — e.g.
+   * `useLocation().pathname` (react-router) or `usePathname()`
+   * (`next/navigation`). The overlay has no router opinion of its own so it
+   * mounts under any host, including Next.js App Router.
+   */
+  pathname: string;
 }
 
 /**
@@ -42,14 +48,12 @@ export interface TestingOverlayProps {
  * clarifying question or a proposed follow-up action the tester can confirm
  * in their next reply.
  */
-export function TestingOverlay({ client, active }: TestingOverlayProps) {
-  const location = useLocation();
-
+export function TestingOverlay({ client, active, pathname }: TestingOverlayProps) {
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [timeline, setTimeline] = useState<TestSessionEvent[]>([]);
   const [actions, setActions] = useState<TestSessionAction[]>([]);
   const [context, setContext] = useState<{ pagePath: string; fieldLabel: string | null }>({
-    pagePath: location.pathname,
+    pagePath: pathname,
     fieldLabel: null,
   });
   const [commentText, setCommentText] = useState("");
@@ -95,13 +99,13 @@ export function TestingOverlay({ client, active }: TestingOverlayProps) {
 
   useEffect(() => {
     if (!active) return;
-    if (lastPathRef.current === location.pathname) return;
-    lastPathRef.current = location.pathname;
+    if (lastPathRef.current === pathname) return;
+    lastPathRef.current = pathname;
     lastFieldRef.current = null;
-    setContext({ pagePath: location.pathname, fieldLabel: null });
-    void record("navigation", location.pathname);
+    setContext({ pagePath: pathname, fieldLabel: null });
+    void record("navigation", pathname);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [active, location.pathname]);
+  }, [active, pathname]);
 
   useEffect(() => {
     if (!active) return;
@@ -112,12 +116,12 @@ export function TestingOverlay({ client, active }: TestingOverlayProps) {
       if (!label || lastFieldRef.current === label) return;
       lastFieldRef.current = label;
       setContext((c) => ({ ...c, fieldLabel: label }));
-      void record("focus", location.pathname, label);
+      void record("focus", pathname, label);
     }
     document.addEventListener("focusin", handleFocusIn);
     return () => document.removeEventListener("focusin", handleFocusIn);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [active, location.pathname]);
+  }, [active, pathname]);
 
   async function handleSubmitComment(e: FormEvent) {
     e.preventDefault();
@@ -125,7 +129,7 @@ export function TestingOverlay({ client, active }: TestingOverlayProps) {
     if (!text || submitting) return;
     setSubmitting(true);
     setCommentText("");
-    await record("comment", location.pathname, context.fieldLabel ?? undefined, text);
+    await record("comment", pathname, context.fieldLabel ?? undefined, text);
     setSubmitting(false);
   }
 

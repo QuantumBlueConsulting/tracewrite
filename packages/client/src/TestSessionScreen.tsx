@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
 import type { TestSession, TestSessionAction, TestSessionEvent, TracewriteClient } from "./types";
 
 function describeError(err: unknown): string {
@@ -86,7 +85,7 @@ function SessionListView({ client }: { client: TracewriteClient }) {
               {sessions.map((s) => (
                 <tr key={s.id}>
                   <td>
-                    <Link to={`/test-sessions/${s.id}`}>{s.label ?? s.id}</Link>
+                    <a href={`/test-sessions/${s.id}`}>{s.label ?? s.id}</a>
                   </td>
                   <td>{new Date(s.started_at).toLocaleString()}</td>
                   <td>
@@ -141,7 +140,7 @@ function SessionDetailView({ client, sessionId }: { client: TracewriteClient; se
   return (
     <div className="page">
       <div className="crumbs">
-        <Link to="/test-sessions">Testing sessions</Link> / Timeline
+        <a href="/test-sessions">Testing sessions</a> / Timeline
       </div>
       <h1>Session timeline</h1>
 
@@ -194,8 +193,15 @@ function SessionDetailView({ client, sessionId }: { client: TracewriteClient; se
  * The review UI over `client`'s session list/timeline/punch-list. No chrome
  * of its own (no nav/top bar) — the host wraps this in whatever page frame
  * it already uses, the same way it wraps any other route's screen.
+ *
+ * `sessionId` comes from whatever router the host uses (e.g.
+ * `useParams().id` for react-router, a Next.js dynamic route's `params.id`)
+ * — this component has no router opinion of its own.
  */
-export function TestSessionScreen({ client }: { client: TracewriteClient }) {
-  const { id } = useParams();
-  return id ? <SessionDetailView client={client} sessionId={id} /> : <SessionListView client={client} />;
+export function TestSessionScreen({ client, sessionId }: { client: TracewriteClient; sessionId?: string | null }) {
+  return sessionId ? (
+    <SessionDetailView client={client} sessionId={sessionId} />
+  ) : (
+    <SessionListView client={client} />
+  );
 }

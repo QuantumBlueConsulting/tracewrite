@@ -33,8 +33,9 @@ Published to npm under MIT. No registry configuration and no authentication — 
 lived on GitHub Packages, which requires a token even for public packages, and that made the
 packages unusable from any container build that installs dependencies without one.
 
-`tracewrite-schema` is just the migration; you can install it or copy the SQL out of
-`packages/schema/migrations/`.
+`tracewrite-schema` is not published — it is a single SQL file. Copy it out of
+[`packages/schema/migrations/`](packages/schema/migrations/) and run it with whatever migration
+tool you already use.
 
 Both packages ship source rather than a build. Bundlers that do not compile dependencies by
 default need to be told to — in Next.js, for example:

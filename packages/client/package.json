@@ -1,6 +1,6 @@
 {
   "name": "@quantumblueconsulting/tracewrite-client",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "tracewrite's UAT capture overlay and review screen \u2014 React components that take a TracewriteClient adapter, no assumptions about your auth or HTTP layer.",
   "type": "module",
   "main": "./src/index.ts",
@@ -13,11 +13,11 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/QuantumBlueConsulting/tracewrite.git",
+    "url": "git+https://github.com/QuantumBlueConsulting/tracewrite.git",
     "directory": "packages/client"
   },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
+    "access": "public"
   },
   "scripts": {
     "build": "echo \"no build step \u2014 consumed as TS source via the host's own bundler\"",
@@ -32,5 +32,20 @@
     "@types/react": "^19.2.17",
     "react": "^19.2.8",
     "typescript": "~6.0.2"
-  }
+  },
+  "license": "MIT",
+  "author": "QuantumBlue Consulting",
+  "homepage": "https://github.com/QuantumBlueConsulting/tracewrite#readme",
+  "bugs": {
+    "url": "https://github.com/QuantumBlueConsulting/tracewrite/issues"
+  },
+  "keywords": [
+    "uat",
+    "user-acceptance-testing",
+    "qa",
+    "feedback",
+    "react",
+    "overlay",
+    "nextjs"
+  ]
 }

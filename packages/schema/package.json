@@ -1,6 +1,6 @@
 {
   "name": "@quantumblueconsulting/tracewrite-schema",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "tracewrite's database migration \u2014 plain SQL, no runner dependency.",
   "private": true,
   "scripts": {
@@ -8,5 +8,25 @@
     "typecheck": "echo \"nothing to typecheck\"",
     "lint": "echo \"no lint configured yet\"",
     "test": "echo \"no tests \u2014 covered by the server package's suite, which applies this SQL directly\""
+  },
+  "license": "MIT",
+  "author": "QuantumBlue Consulting",
+  "homepage": "https://github.com/QuantumBlueConsulting/tracewrite#readme",
+  "bugs": {
+    "url": "https://github.com/QuantumBlueConsulting/tracewrite/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "uat",
+    "user-acceptance-testing",
+    "postgres",
+    "migration"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/QuantumBlueConsulting/tracewrite.git",
+    "directory": "packages/schema"
   }
 }

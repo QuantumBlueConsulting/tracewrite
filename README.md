@@ -24,32 +24,24 @@ using the product rather than a rigid test script.
 
 ## Installing
 
-`tracewrite-server` and `tracewrite-client` are published to GitHub Packages (private, org-only for
-now). A consuming project maps the scope in its own `.npmrc`:
-
-```
-@quantumblueconsulting:registry=https://npm.pkg.github.com
-```
-
-The credential goes somewhere else, and this matters: **pnpm deliberately ignores environment
-variables in registry credentials that come from a project `.npmrc`**, because that file is
-committed and could leak a token to an attacker-controlled registry. A
-`//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}` line there is silently inert — the install
-then fails with a 401 that does not explain why.
-
-Put it somewhere pnpm still expands instead:
-
 ```sh
-# locally, once — needs read:packages (gh auth refresh -s read:packages if the token lacks it)
-pnpm config set "//npm.pkg.github.com/:_authToken" "$(gh auth token)"
+npm install @quantumblueconsulting/tracewrite-server   # your API
+npm install @quantumblueconsulting/tracewrite-client   # your web app
 ```
 
-In CI, give the job `permissions: packages: read` and write the token to the user-level config
-before installing, since the packages live in the same org as most consumers:
+Published to npm under MIT. No registry configuration and no authentication — earlier versions
+lived on GitHub Packages, which requires a token even for public packages, and that made the
+packages unusable from any container build that installs dependencies without one.
 
-```yaml
-- run: pnpm config set "//npm.pkg.github.com/:_authToken" "${{ secrets.GITHUB_TOKEN }}"
-- run: pnpm install --frozen-lockfile
+`tracewrite-schema` is just the migration; you can install it or copy the SQL out of
+`packages/schema/migrations/`.
+
+Both packages ship source rather than a build. Bundlers that do not compile dependencies by
+default need to be told to — in Next.js, for example:
+
+```ts
+// next.config.ts
+transpilePackages: ["@quantumblueconsulting/tracewrite-client"],
 ```
 
 ## Wiring it into a host app
@@ -153,3 +145,7 @@ mocks the Anthropic client at the module boundary — no network calls, no API k
 createdb tracewrite_test
 DATABASE_URL=postgres://localhost:5432/tracewrite_test pnpm --filter @quantumblueconsulting/tracewrite-server test
 ```
+
+## License
+
+MIT — see [LICENSE](LICENSE).

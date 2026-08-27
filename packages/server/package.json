@@ -1,6 +1,6 @@
 {
   "name": "@quantumblueconsulting/tracewrite-server",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "tracewrite's backend: session/timeline logic plus Fastify and Express adapters, both host-agnostic (bring your own pg Pool and auth).",
   "type": "module",
   "main": "./src/index.mjs",
@@ -15,11 +15,11 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/QuantumBlueConsulting/tracewrite.git",
+    "url": "git+https://github.com/QuantumBlueConsulting/tracewrite.git",
     "directory": "packages/server"
   },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
+    "access": "public"
   },
   "scripts": {
     "build": "echo \"no build step \u2014 plain ESM\"",
@@ -53,5 +53,21 @@
     "pg": "^8.13.0",
     "typescript": "^5.6.0"
   },
-  "types": "./src/index.d.mts"
+  "types": "./src/index.d.mts",
+  "license": "MIT",
+  "author": "QuantumBlue Consulting",
+  "homepage": "https://github.com/QuantumBlueConsulting/tracewrite#readme",
+  "bugs": {
+    "url": "https://github.com/QuantumBlueConsulting/tracewrite/issues"
+  },
+  "keywords": [
+    "uat",
+    "user-acceptance-testing",
+    "qa",
+    "feedback",
+    "fastify",
+    "express",
+    "postgres",
+    "ai"
+  ]
 }

@@ -1,7 +1,7 @@
 {
   "name": "tracewrite",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.3.0",
   "description": "A conversational UAT capture overlay: a tester narrates their experience while using the real product, and an AI reviewer replies inline with clarifying questions or proposed follow-up actions.",
   "engines": {
     "node": ">=22.13"
@@ -12,5 +12,12 @@
     "test": "pnpm -r run test",
     "lint": "pnpm -r run lint",
     "typecheck": "pnpm -r run typecheck"
-  }
+  },
+  "license": "MIT",
+  "author": "QuantumBlue Consulting",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/QuantumBlueConsulting/tracewrite.git"
+  },
+  "homepage": "https://github.com/QuantumBlueConsulting/tracewrite#readme"
 }

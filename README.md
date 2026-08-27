@@ -25,16 +25,32 @@ using the product rather than a rigid test script.
 ## Installing
 
 `tracewrite-server` and `tracewrite-client` are published to GitHub Packages (private, org-only for
-now). A consuming project needs an `.npmrc` pointing the scope there:
+now). A consuming project maps the scope in its own `.npmrc`:
 
 ```
 @quantumblueconsulting:registry=https://npm.pkg.github.com
-//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}
 ```
 
-and `NODE_AUTH_TOKEN` set to a token with `read:packages` — locally, `gh auth token` (after `gh auth
-refresh -s read:packages` once); in CI, `${{ secrets.GITHUB_TOKEN }}` with `permissions: packages:
-read` set on the job, since the packages live in the same org as most consumers.
+The credential goes somewhere else, and this matters: **pnpm deliberately ignores environment
+variables in registry credentials that come from a project `.npmrc`**, because that file is
+committed and could leak a token to an attacker-controlled registry. A
+`//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}` line there is silently inert — the install
+then fails with a 401 that does not explain why.
+
+Put it somewhere pnpm still expands instead:
+
+```sh
+# locally, once — needs read:packages (gh auth refresh -s read:packages if the token lacks it)
+pnpm config set "//npm.pkg.github.com/:_authToken" "$(gh auth token)"
+```
+
+In CI, give the job `permissions: packages: read` and write the token to the user-level config
+before installing, since the packages live in the same org as most consumers:
+
+```yaml
+- run: pnpm config set "//npm.pkg.github.com/:_authToken" "${{ secrets.GITHUB_TOKEN }}"
+- run: pnpm install --frozen-lockfile
+```
 
 ## Wiring it into a host app
 

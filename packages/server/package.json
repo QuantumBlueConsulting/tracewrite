@@ -1,13 +1,18 @@
 {
   "name": "@quantumblueconsulting/tracewrite-server",
-  "version": "0.1.0",
-  "description": "tracewrite's backend: session/timeline logic and a Fastify plugin, both host-agnostic (bring your own pg Pool and auth decorator).",
+  "version": "0.2.0",
+  "description": "tracewrite's backend: session/timeline logic plus Fastify and Express adapters, both host-agnostic (bring your own pg Pool and auth).",
   "type": "module",
   "main": "./src/index.mjs",
   "exports": {
-    ".": "./src/index.mjs"
+    ".": {
+      "types": "./src/index.d.mts",
+      "default": "./src/index.mjs"
+    }
   },
-  "files": ["src"],
+  "files": [
+    "src"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/QuantumBlueConsulting/tracewrite.git",
@@ -17,7 +22,7 @@
     "registry": "https://npm.pkg.github.com"
   },
   "scripts": {
-    "build": "echo \"no build step — plain ESM\"",
+    "build": "echo \"no build step \u2014 plain ESM\"",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "lint": "echo \"no lint configured yet\"",
     "test": "node --test"
@@ -31,8 +36,12 @@
     "pg": "^8.13.0"
   },
   "peerDependenciesMeta": {
-    "fastify": { "optional": true },
-    "express": { "optional": true }
+    "fastify": {
+      "optional": true
+    },
+    "express": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "@types/node": "^22.0.0",
@@ -43,5 +52,6 @@
     "express": "^4.21.0",
     "pg": "^8.13.0",
     "typescript": "^5.6.0"
-  }
+  },
+  "types": "./src/index.d.mts"
 }

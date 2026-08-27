@@ -1,12 +1,12 @@
 {
   "name": "@quantumblueconsulting/tracewrite-schema",
-  "version": "0.1.0",
-  "description": "tracewrite's database migration — plain SQL, no runner dependency.",
+  "version": "0.2.0",
+  "description": "tracewrite's database migration \u2014 plain SQL, no runner dependency.",
   "private": true,
   "scripts": {
-    "build": "echo \"no build step — plain SQL\"",
+    "build": "echo \"no build step \u2014 plain SQL\"",
     "typecheck": "echo \"nothing to typecheck\"",
     "lint": "echo \"no lint configured yet\"",
-    "test": "echo \"no tests — covered by the server package's suite, which applies this SQL directly\""
+    "test": "echo \"no tests \u2014 covered by the server package's suite, which applies this SQL directly\""
   }
 }

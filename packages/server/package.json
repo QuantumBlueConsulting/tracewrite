@@ -1,6 +1,6 @@
 {
   "name": "@quantumblueconsulting/tracewrite-server",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "tracewrite's backend: session/timeline logic plus Fastify and Express adapters, both host-agnostic (bring your own pg Pool and auth).",
   "type": "module",
   "main": "./src/index.mjs",

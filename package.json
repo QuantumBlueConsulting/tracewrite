@@ -1,7 +1,7 @@
 {
   "name": "tracewrite",
   "private": true,
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "A conversational UAT capture overlay: a tester narrates their experience while using the real product, and an AI reviewer replies inline with clarifying questions or proposed follow-up actions.",
   "engines": {
     "node": ">=22.13"

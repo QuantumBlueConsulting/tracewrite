@@ -166,7 +166,15 @@ export function createTestSessionsApi({ getPool }) {
       );
       return { aiReply: aiReplyEvent, action: actionRows[0] };
     } catch (err) {
-      if (err instanceof TestSessionAiError) return {};
+      if (err instanceof TestSessionAiError) {
+        // Swallowed on purpose: a tester's comment must save whether or not the reviewer can be
+        // reached. But swallowing it silently once left the feature completely dead with no
+        // trace anywhere — a host had no outbound route at all, and the only symptom was replies
+        // never arriving. One line is enough to make that diagnosable without ever surfacing an
+        // infrastructure problem to the person testing.
+        console.warn(`[tracewrite] AI review skipped (${err.code}): ${err.message}`);
+        return {};
+      }
       throw err;
     }
   }

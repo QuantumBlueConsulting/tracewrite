@@ -63,6 +63,7 @@ export function TestingOverlay({ client, active, pathname }: TestingOverlayProps
   const [collapsed, setCollapsed] = useState(false);
 
   const sessionPromiseRef = useRef<Promise<string> | null>(null);
+  const rootRef = useRef<HTMLDivElement | null>(null);
   const lastPathRef = useRef<string | null>(null);
   const lastFieldRef = useRef<string | null>(null);
 
@@ -143,12 +144,33 @@ export function TestingOverlay({ client, active, pathname }: TestingOverlayProps
     setActions([]);
   }
 
+  // Reserve the bar's own height at the bottom of the page so it never covers page content.
+  // Docking it to the bottom edge stops it sitting on top of a form's submit button, but on its
+  // own it would still hide the last rows of a list. Measured rather than hardcoded because the
+  // bar's height changes when the timeline is collapsed or grows.
+  useEffect(() => {
+    const el = rootRef.current;
+    if (!active || !el) return;
+    const body = document.body;
+    const previous = body.style.paddingBottom;
+    const apply = () => {
+      body.style.paddingBottom = `${el.getBoundingClientRect().height}px`;
+    };
+    apply();
+    const observer = new ResizeObserver(apply);
+    observer.observe(el);
+    return () => {
+      observer.disconnect();
+      body.style.paddingBottom = previous;
+    };
+  }, [active, collapsed]);
+
   if (!active) return null;
 
   const actionByReplyEventId = new Map(actions.map((a) => [a.event_id, a]));
 
   return (
-    <div className="testing-overlay no-print" data-testing-overlay>
+    <div className="testing-overlay no-print" data-testing-overlay ref={rootRef}>
       <div className="testing-overlay-header">
         <strong>Testing Mode</strong>
         <button type="button" className="secondary" onClick={() => setCollapsed((c) => !c)}>

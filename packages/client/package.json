@@ -1,6 +1,6 @@
 {
   "name": "@quantumblueconsulting/tracewrite-client",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "tracewrite's UAT capture overlay and review screen \u2014 React components that take a TracewriteClient adapter, no assumptions about your auth or HTTP layer.",
   "type": "module",
   "main": "./src/index.ts",
